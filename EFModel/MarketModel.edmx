@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="MarketModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="MarketModelTargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="MarketModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="MarketModelContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Coins" EntityType="MarketModel.Coin" />
+          <EntitySet Name="DataSources" EntityType="MarketModel.DataSource" />
+          <EntitySet Name="Tickers" EntityType="MarketModel.Ticker" />
+          <AssociationSet Name="CoinTicker" Association="MarketModel.CoinTicker">
+            <End Role="Coin" EntitySet="Coins" />
+            <End Role="Ticker" EntitySet="Tickers" />
+          </AssociationSet>
+          <EntitySet Name="DataSourceQueries" EntityType="MarketModel.DataSourceQuery" />
+          <AssociationSet Name="DataSourceDataSourceQuery" Association="MarketModel.DataSourceDataSourceQuery">
+            <End Role="DataSource" EntitySet="DataSources" />
+            <End Role="DataSourceQuery" EntitySet="DataSourceQueries" />
+          </AssociationSet>
+          <AssociationSet Name="DataSourceQueryTicker" Association="MarketModel.DataSourceQueryTicker">
+            <End Role="DataSourceQuery" EntitySet="DataSourceQueries" />
+            <End Role="Ticker" EntitySet="Tickers" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Coin">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Symbol" Type="String" Nullable="false" />
+          <NavigationProperty Name="Tickers" Relationship="MarketModel.CoinTicker" FromRole="Coin" ToRole="Ticker" />
+        </EntityType>
+        <EntityType Name="DataSource">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <Property Name="Url" Type="String" Nullable="false" />
+          <Property Name="Scraper" Type="String" Nullable="false" />
+          <NavigationProperty Name="DataSourceQueries" Relationship="MarketModel.DataSourceDataSourceQuery" FromRole="DataSource" ToRole="DataSourceQuery" />
+          <Property Name="PollingFrequency" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Ticker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Coin" Relationship="MarketModel.CoinTicker" FromRole="Ticker" ToRole="Coin" />
+          <Property Name="PriceUSD" Type="Decimal" Nullable="false" />
+          <Property Name="PriceBTC" Type="Decimal" Nullable="false" />
+          <Property Name="Vol24USD" Type="Decimal" Nullable="false" />
+          <Property Name="MarketCapUSD" Type="Decimal" Nullable="false" />
+          <Property Name="AvailableSupply" Type="Decimal" Nullable="false" />
+          <Property Name="TotalSupply" Type="Decimal" Nullable="false" />
+          <Property Name="PercentChange24h" Type="Decimal" Nullable="false" />
+          <Property Name="PercentChange1h" Type="Decimal" Nullable="false" />
+          <Property Name="PercentChange7d" Type="Decimal" Nullable="false" />
+          <Property Name="LastUpdated" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="DataSourceQuery" Relationship="MarketModel.DataSourceQueryTicker" FromRole="Ticker" ToRole="DataSourceQuery" />
+        </EntityType>
+        <Association Name="CoinTicker">
+          <End Type="MarketModel.Coin" Role="Coin" Multiplicity="1" />
+          <End Type="MarketModel.Ticker" Role="Ticker" Multiplicity="*" />
+        </Association>
+        <EntityType Name="DataSourceQuery">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="DataSource" Relationship="MarketModel.DataSourceDataSourceQuery" FromRole="DataSourceQuery" ToRole="DataSource" />
+          <NavigationProperty Name="Tickers" Relationship="MarketModel.DataSourceQueryTicker" FromRole="DataSourceQuery" ToRole="Ticker" />
+          <Property Name="TimeStamp" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <Association Name="DataSourceDataSourceQuery">
+          <End Type="MarketModel.DataSource" Role="DataSource" Multiplicity="1" />
+          <End Type="MarketModel.DataSourceQuery" Role="DataSourceQuery" Multiplicity="*" />
+        </Association>
+        <Association Name="DataSourceQueryTicker">
+          <End Type="MarketModel.DataSourceQuery" Role="DataSourceQuery" Multiplicity="1" />
+          <End Type="MarketModel.Ticker" Role="Ticker" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="MarketModel" />
+        <Alias Key="Target" Value="MarketModel.Store" />
+        <EntityContainerMapping CdmEntityContainer="MarketModelContainer" StorageEntityContainer="MarketModelTargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
