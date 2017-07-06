@@ -18,7 +18,7 @@ namespace MarketModel
         public decimal PercentChange24h { get; set; }
         public decimal PercentChange1h { get; set; }
         public decimal PercentChange7d { get; set; }
-        public long LastUpdated { get; set; }
+        public DateTime LastUpdated { get; set; }
 
         public virtual Coin Coin { get; set; }
         public virtual DataSourceQuery DataSourceQuery { get; set; }
